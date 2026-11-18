@@ -1,0 +1,27 @@
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: msvc-products
+              uri: lb://msvc-products
+              predicates:
+                - Path=/api/products/**
+              filters:
+                - StripPrefix=2
+                -  name: SampleCookie
+                   args:
+                     name: user
+                     value: Luis
+                     message: "Hola mi mensajer personalizado desde la factory"
+            - id: mscv-items
+              uri: lb://mscv-items
+              predicates:
+                - Path=/api/items/**
+              filters:
+                - StripPrefix=2
+                - AddRequestHeader=token-request, prueba
+                - AddResponseHeader=token-response, 10370700
+                - AddRequestParameter=name, Luis
+                - SetResponseHeader=Content-Type, text/plain
